@@ -289,6 +289,24 @@ These thresholds and scores are currently **prototype values** and require calib
 
 The project includes a Flask-based web dashboard designed to demonstrate the complete AI workflow.
 
+## 📸 Prototype Screenshots
+
+### Main Dashboard
+
+![ExtremeWeatherAI Dashboard](<Screenshot 2026-09-28 152044.png>)
+
+### AI Tracking
+
+![AI Tracking](<Screenshot 2026-09-28 152140.png>)
+
+### Risk & Alerts
+
+![Risk and Alerts](<Screenshot 2026-09-28 152205.png>)
+
+### AI Pipeline
+
+![AI Pipeline](<Screenshot 2026-09-28 152233.png>)
+
 ## Dashboard modules
 
 ### 📊 Dashboard
