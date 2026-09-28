@@ -1,0 +1,20 @@
+{
+    "status": "completed",
+    "prototype": true,
+    "model": "Spatio-Temporal GNN",
+    "model_file": "models/spatiotemporal_gnn.pth",
+    "current_location": {
+        "latitude": 18.09,
+        "longitude": 89.36
+    },
+    "predicted_location": {
+        "latitude": 18.97,
+        "longitude": 90.1
+    },
+    "prediction_change": {
+        "latitude_change": 0.88,
+        "longitude_change": 0.74
+    },
+    "source": "Synthetic trajectory dataset",
+    "note": "Prototype prediction from the trained custom spatio-temporal GNN. This is not an operational NWP forecast."
+}

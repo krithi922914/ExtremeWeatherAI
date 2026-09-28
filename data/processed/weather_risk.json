@@ -1,0 +1,13 @@
+{
+    "risk_level": "Extreme",
+    "location": {
+        "latitude": 18.09091,
+        "longitude": 89.36364
+    },
+    "weather": {
+        "maximum_wind_speed_mps": 62.911194,
+        "intensity_score": 89.87,
+        "movement_km": 103.89576,
+        "direction": "NorthEast"
+    }
+}

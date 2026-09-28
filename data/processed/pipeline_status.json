@@ -1,0 +1,64 @@
+{
+    "pipeline_status": "completed",
+    "started_at": "2026-09-28T01:40:36.719980",
+    "completed_at": "2026-09-28T01:40:53.426574",
+    "completed": 9,
+    "total": 9,
+    "percentage": 100,
+    "stages": [
+        {
+            "id": 1,
+            "name": "Weather Data Ingestion",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 2,
+            "name": "Extreme Weather Detection",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 3,
+            "name": "Anomaly Region Detection",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 4,
+            "name": "Bounding Box Generation",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 5,
+            "name": "Event Record Creation",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 6,
+            "name": "Trajectory Dataset Generation",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 7,
+            "name": "Spatio-Temporal GNN Prediction",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 8,
+            "name": "Risk Classification",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        },
+        {
+            "id": 9,
+            "name": "Emergency Alert Generation",
+            "status": "completed",
+            "message": "Stage completed successfully"
+        }
+    ]
+}

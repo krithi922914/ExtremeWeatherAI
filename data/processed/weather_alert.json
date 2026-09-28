@@ -1,0 +1,16 @@
+{
+    "location": {
+        "latitude": 18.0909,
+        "longitude": 89.3636
+    },
+    "weather": {
+        "maximum_wind_speed": 62.91,
+        "intensity_score": 89.87,
+        "movement_km": 103.9,
+        "direction": "NorthEast"
+    },
+    "risk": {
+        "level": "Extreme",
+        "description": "Extreme weather anomaly detected. Immediate alert recommended."
+    }
+}

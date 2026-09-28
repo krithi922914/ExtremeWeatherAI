@@ -1,0 +1,23 @@
+{
+    "alert_id": "EWA-001",
+    "alert_status": "ACTIVE",
+    "event": {
+        "type": "Extreme Weather Anomaly",
+        "severity": "Extreme"
+    },
+    "generated_at": "2026-09-28T06:35:14.243863+00:00",
+    "location": {
+        "latitude": 18.09091,
+        "longitude": 89.36364,
+        "affected_radius_km": 5
+    },
+    "weather": {
+        "maximum_wind_speed_mps": 62.911194,
+        "intensity_score": 89.87,
+        "movement_km": 103.89576,
+        "direction": "NorthEast"
+    },
+    "response": {
+        "recommended_action": "Issue immediate extreme-weather alert and activate appropriate emergency response procedures."
+    }
+}

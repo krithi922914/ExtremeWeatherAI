@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Extreme Weather AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <div>
+
+            <h1>Extreme Weather AI</h1>
+
+            <p>
+                AI-Driven Spatio-Temporal Weather Monitoring
+            </p>
+
+        </div>
+
+        <div class="status">
+            {{ alert.alert_status }}
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="alert-banner">
+
+            <div>
+
+                <h2>
+                    {{ alert.event.severity }} Weather Alert
+                </h2>
+
+                <p>
+                    {{ alert.event.type }}
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="cards">
+
+
+            <div class="card">
+
+                <h3>Maximum Wind</h3>
+
+                <div class="value">
+                    {{ alert.weather.maximum_wind_speed_mps }}
+                    <span>m/s</span>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Intensity</h3>
+
+                <div class="value">
+                    {{ alert.weather.intensity_score }}
+                    <span>/100</span>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Movement</h3>
+
+                <div class="value">
+                    {{ alert.weather.movement_km }}
+                    <span>km</span>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Direction</h3>
+
+                <div class="value">
+                    {{ alert.weather.direction }}
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="location-panel">
+
+            <h2>Predicted Extreme Weather Location</h2>
+
+            <div class="coordinates">
+
+                <div>
+                    <strong>Latitude</strong>
+                    <span>
+                        {{ alert.location.latitude }}
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Longitude</strong>
+                    <span>
+                        {{ alert.location.longitude }}
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Alert Radius</strong>
+                    <span>
+                        {{ alert.location.affected_radius_km }} km
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="response-panel">
+
+            <h2>Recommended Response</h2>
+
+            <p>
+                {{ alert.response.recommended_action }}
+            </p>
+
+        </section>
+
+
+        <section class="api-panel">
+
+            <h2>Alert API</h2>
+
+            <p>
+                The current emergency alert is available through:
+            </p>
+
+            <code>
+                /api/alert
+            </code>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            Extreme Weather AI — SIH Prototype
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

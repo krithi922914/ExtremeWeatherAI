@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Extreme Weather AI</title>
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080b12;
+            color: #f5f7fb;
+        }
+
+        .header {
+            padding: 22px 35px;
+            background: #0d111b;
+            border-bottom: 1px solid #202737;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .brand p {
+            margin: 6px 0 0;
+            color: #8993a7;
+            font-size: 13px;
+        }
+
+        .status {
+            padding: 9px 15px;
+            border-radius: 20px;
+            background: rgba(255, 70, 70, 0.12);
+            color: #ff6464;
+            border: 1px solid rgba(255, 70, 70, 0.35);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 25px 35px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: #101520;
+            border: 1px solid #202838;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .card-label {
+            color: #8b95a9;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-value {
+            margin-top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .danger {
+            color: #ff6262;
+        }
+
+        .warning {
+            color: #ffb84d;
+        }
+
+        .success {
+            color: #53d88a;
+        }
+
+        .blue {
+            color: #61a8ff;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 22px;
+        }
+
+        .panel {
+            background: #101520;
+            border: 1px solid #202838;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #202838;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .panel-header span {
+            color: #7f899c;
+            font-size: 12px;
+        }
+
+        #map {
+            height: 520px;
+            width: 100%;
+        }
+
+        .alert-box {
+            padding: 20px;
+        }
+
+        .severity {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 55, 55, 0.10);
+            border: 1px solid rgba(255, 55, 55, 0.30);
+            margin-bottom: 18px;
+        }
+
+        .severity-title {
+            color: #ff5e5e;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .severity-value {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 13px 0;
+            border-bottom: 1px solid #202838;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row span:first-child {
+            color: #8c96a9;
+        }
+
+        .info-row span:last-child {
+            font-weight: bold;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0b1019;
+            border-radius: 10px;
+            color: #b8c0cf;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .bottom-grid {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .pipeline {
+            padding: 20px;
+        }
+
+        .stage {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #202838;
+            font-size: 13px;
+        }
+
+        .stage:last-child {
+            border-bottom: none;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #53d88a;
+            box-shadow: 0 0 10px rgba(83, 216, 138, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #596377;
+            font-size: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid,
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 18px;
+            }
+
+            .header {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .weather-map {
+    position: relative;
+    height: 520px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(55, 100, 180, 0.16),
+            transparent 55%
+        ),
+        #09101b;
+}
+
+.map-grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(100,150,220,0.08) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(100,150,220,0.08) 1px,
+            transparent 1px
+        );
+
+    background-size: 50px 50px;
+}
+
+.map-title {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    z-index: 5;
+
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+
+    color: #8da8ca;
+}
+
+.map-coordinates {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    z-index: 5;
+
+    font-size: 11px;
+    color: #697d98;
+}
+
+#trajectoryMap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.map-legend {
+    position: absolute;
+    bottom: 18px;
+    left: 20px;
+    z-index: 5;
+
+    display: flex;
+    gap: 18px;
+
+    padding: 10px 14px;
+
+    background: rgba(8,13,23,0.88);
+    border: 1px solid #26344a;
+    border-radius: 9px;
+
+    font-size: 11px;
+    color: #9aa8bc;
+}
+
+.map-legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.map-legend i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-blue {
+    background: #61a8ff;
+}
+
+.legend-red {
+    background: #ff5964;
+}
+
+.legend-zone {
+    background: rgba(255,89,100,0.35);
+    border: 1px solid #ff5964;
+}
+
+@keyframes pulse {
+
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+        transform-origin: center;
+    }
+
+    50% {
+        opacity: 0.2;
+        transform: scale(2);
+        transform-origin: center;
+    }
+
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+        transform-origin: center;
+    }
+
+}
+
+#currentPulse {
+    animation: pulse 2s infinite;
+}
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="brand">
+        <h1>🌩️ Extreme Weather AI</h1>
+        <p>AI-driven spatio-temporal tracking & anomaly intelligence</p>
+    </div>
+
+    <div class="status">
+        ● ACTIVE ALERT
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- STAT CARDS -->
+    <section class="stats">
+
+        <div class="card">
+            <div class="card-label">Severity</div>
+            <div class="card-value danger">
+                {{ alert.severity }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Maximum Wind</div>
+            <div class="card-value warning">
+                {{ alert.maximum_wind_speed }} m/s
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Intensity Score</div>
+            <div class="card-value danger">
+                {{ alert.intensity_score }}/100
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Movement</div>
+            <div class="card-value blue">
+                {{ alert.movement_km }} km
+            </div>
+        </div>
+
+    </section>
+
+    <!-- MAP + ALERT -->
+    <section class="main-grid">
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h2>🗺️ Anomaly Tracking Map</h2>
+                <span>GNN trajectory prediction</span>
+            </div>
+
+            <div class="weather-map">
+
+    <div class="map-grid"></div>
+
+    <div class="map-title">
+        LIVE ANOMALY TRACKING
+    </div>
+
+    <div class="map-coordinates">
+        LAT {{ alert.location.latitude }}° &nbsp;&nbsp;
+        LON {{ alert.location.longitude }}°
+    </div>
+
+    <svg id="trajectoryMap"
+         viewBox="0 0 1000 520"
+         preserveAspectRatio="none">
+
+        <!-- trajectory line -->
+        <polyline
+            id="trajectoryLine"
+            fill="none"
+            stroke="#61a8ff"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+
+        <!-- affected region -->
+        <circle
+            id="riskCircle"
+            cx="500"
+            cy="260"
+            r="55"
+            fill="rgba(255,60,70,0.15)"
+            stroke="#ff5964"
+            stroke-width="2"
+        />
+
+        <!-- trajectory points -->
+        <g id="trajectoryPoints"></g>
+
+        <!-- current anomaly -->
+        <circle
+            id="currentPulse"
+            cx="500"
+            cy="260"
+            r="18"
+            fill="rgba(255,60,70,0.25)"
+        />
+
+        <circle
+            id="currentPoint"
+            cx="500"
+            cy="260"
+            r="8"
+            fill="#ff5964"
+        />
+
+    </svg>
+
+    <div class="map-legend">
+
+        <span>
+            <i class="legend-blue"></i>
+            Historical trajectory
+        </span>
+
+        <span>
+            <i class="legend-red"></i>
+            Current anomaly
+        </span>
+
+        <span>
+            <i class="legend-zone"></i>
+            5 km affected zone
+        </span>
+
+    </div>
+
+</div>
+
+        </div>
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h2>🚨 Emergency Alert</h2>
+                <span>{{ alert.alert_id }}</span>
+            </div>
+
+            <div class="alert-box">
+
+                <div class="severity">
+                    <div class="severity-title">
+                        Current Risk Level
+                    </div>
+
+                    <div class="severity-value">
+                        {{ alert.severity }}
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span>Latitude</span>
+                    <span>{{ alert.location.latitude }}°</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Longitude</span>
+                    <span>{{ alert.location.longitude }}°</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Affected Radius</span>
+                    <span>{{ alert.location.affected_radius_km }} km</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Maximum Wind</span>
+                    <span>{{ alert.maximum_wind_speed }} m/s</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Movement</span>
+                    <span>{{ alert.direction }}</span>
+                </div>
+
+                <div class="response">
+                    <strong>Recommended Response</strong>
+                    <br><br>
+                    {{ alert.response.recommended_action }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LOWER PANELS -->
+    <section class="bottom-grid">
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h2>⚙️ AI Pipeline</h2>
+                <span>9 / 9 stages completed</span>
+            </div>
+
+            <div class="pipeline">
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Weather data generation
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Extreme anomaly detection
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Anomaly region identification
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Bounding box generation
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Event tracking
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Spatio-temporal graph
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    GNN trajectory prediction
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Risk classification
+                </div>
+
+                <div class="stage">
+                    <div class="dot"></div>
+                    Emergency alert generation
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h2>🧠 AI Prediction</h2>
+                <span>Spatio-temporal GNN</span>
+            </div>
+
+            <div class="alert-box">
+
+                <div class="info-row">
+                    <span>Current Latitude</span>
+                    <span>{{ alert.location.latitude }}°</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Current Longitude</span>
+                    <span>{{ alert.location.longitude }}°</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Movement Direction</span>
+                    <span class="blue">{{ alert.direction }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Movement Distance</span>
+                    <span>{{ alert.movement_km }} km</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Alert Radius</span>
+                    <span>{{ alert.location.affected_radius_km }} km</span>
+                </div>
+
+                <div class="response">
+                    <strong>Prediction System</strong>
+                    <br><br>
+                    The spatio-temporal graph neural network analyses
+                    the movement of the detected anomaly and estimates
+                    its future trajectory.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<div class="footer">
+    Extreme Weather AI • Prototype for SIH Problem Statement 26078
+</div>
+
+
+<!-- Leaflet -->
+<script>
+
+const trajectory = {{ trajectory | tojson }};
+
+const svg = document.getElementById("trajectoryMap");
+const line = document.getElementById("trajectoryLine");
+const pointsGroup = document.getElementById("trajectoryPoints");
+
+const currentLatitude =
+    Number({{ alert.location.latitude }});
+
+const currentLongitude =
+    Number({{ alert.location.longitude }});
+
+
+// --------------------------------------------------
+// Convert latitude/longitude into SVG coordinates
+// --------------------------------------------------
+
+function project(lat, lon) {
+
+    const minLat = 5;
+    const maxLat = 25;
+
+    const minLon = 75;
+    const maxLon = 100;
+
+    const x =
+        ((lon - minLon) /
+        (maxLon - minLon)) * 1000;
+
+    const y =
+        520 -
+        ((lat - minLat) /
+        (maxLat - minLat)) * 520;
+
+    return {
+        x: x,
+        y: y
+    };
+}
+
+
+// --------------------------------------------------
+// Draw trajectory
+// --------------------------------------------------
+
+let coordinates = [];
+
+trajectory.forEach(function(point) {
+
+    const lat = Number(point.latitude);
+    const lon = Number(point.longitude);
+
+    if (
+        Number.isFinite(lat) &&
+        Number.isFinite(lon)
+    ) {
+
+        const position =
+            project(lat, lon);
+
+        coordinates.push(position);
+
+    }
+
+});
+
+
+// --------------------------------------------------
+// Draw trajectory line
+// --------------------------------------------------
+
+if (coordinates.length > 1) {
+
+    const path =
+        coordinates
+        .map(function(point) {
+
+            return point.x + "," + point.y;
+
+        })
+        .join(" ");
+
+    line.setAttribute(
+        "points",
+        path
+    );
+
+}
+
+
+// --------------------------------------------------
+// Draw historical points
+// --------------------------------------------------
+
+coordinates.forEach(
+    function(point, index) {
+
+        const circle =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "circle"
+            );
+
+        circle.setAttribute(
+            "cx",
+            point.x
+        );
+
+        circle.setAttribute(
+            "cy",
+            point.y
+        );
+
+        circle.setAttribute(
+            "r",
+            index === coordinates.length - 1
+                ? 7
+                : 4
+        );
+
+        circle.setAttribute(
+            "fill",
+            index === coordinates.length - 1
+                ? "#ff5964"
+                : "#61a8ff"
+        );
+
+        pointsGroup.appendChild(
+            circle
+        );
+
+    }
+);
+
+
+// --------------------------------------------------
+// Current anomaly position
+// --------------------------------------------------
+
+const current =
+    project(
+        currentLatitude,
+        currentLongitude
+    );
+
+document
+    .getElementById("currentPoint")
+    .setAttribute(
+        "cx",
+        current.x
+    );
+
+document
+    .getElementById("currentPoint")
+    .setAttribute(
+        "cy",
+        current.y
+    );
+
+document
+    .getElementById("currentPulse")
+    .setAttribute(
+        "cx",
+        current.x
+    );
+
+document
+    .getElementById("currentPulse")
+    .setAttribute(
+        "cy",
+        current.y
+    );
+
+document
+    .getElementById("riskCircle")
+    .setAttribute(
+        "cx",
+        current.x
+    );
+
+document
+    .getElementById("riskCircle")
+    .setAttribute(
+        "cy",
+        current.y
+    );
+
+</script>
+
+</body>
+</html>
