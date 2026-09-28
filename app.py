@@ -2994,23 +2994,48 @@ function trackingMapHTML() {
                 <defs>
 
                     <marker
-                        id="arrow"
-                        markerWidth="8"
-                        markerHeight="8"
-                        refX="7"
-                        refY="4"
+                        id="trackingArrow"
+                        markerWidth="10"
+                        markerHeight="10"
+                        refX="8"
+                        refY="5"
                         orient="auto"
                     >
-
                         <path
-                            d="M0,0 L8,4 L0,8 Z"
+                            d="M0,0 L10,5 L0,10 Z"
                             fill="#ff9c42"
                         />
-
                     </marker>
+
+                    <radialGradient
+                        id="stormGlow"
+                        cx="50%"
+                        cy="50%"
+                        r="50%"
+                    >
+                        <stop
+                            offset="0%"
+                            stop-color="#ff5063"
+                            stop-opacity="0.45"
+                        />
+
+                        <stop
+                            offset="70%"
+                            stop-color="#ff5063"
+                            stop-opacity="0.12"
+                        />
+
+                        <stop
+                            offset="100%"
+                            stop-color="#ff5063"
+                            stop-opacity="0"
+                        />
+                    </radialGradient>
 
                 </defs>
 
+
+                <!-- MAP BACKGROUND -->
 
                 <rect
                     x="0"
@@ -3021,125 +3046,385 @@ function trackingMapHTML() {
                 />
 
 
-                <g id="mapGrid"></g>
+                <!-- GRID -->
 
+                <g
+                    stroke="#17334a"
+                    stroke-width="1"
+                    opacity="0.55"
+                >
+
+                    <line x1="100" y1="20" x2="100" y2="500"/>
+                    <line x1="200" y1="20" x2="200" y2="500"/>
+                    <line x1="300" y1="20" x2="300" y2="500"/>
+                    <line x1="400" y1="20" x2="400" y2="500"/>
+                    <line x1="500" y1="20" x2="500" y2="500"/>
+                    <line x1="600" y1="20" x2="600" y2="500"/>
+                    <line x1="700" y1="20" x2="700" y2="500"/>
+                    <line x1="800" y1="20" x2="800" y2="500"/>
+                    <line x1="900" y1="20" x2="900" y2="500"/>
+
+                    <line x1="20" y1="100" x2="980" y2="100"/>
+                    <line x1="20" y1="200" x2="980" y2="200"/>
+                    <line x1="20" y1="300" x2="980" y2="300"/>
+                    <line x1="20" y1="400" x2="980" y2="400"/>
+
+                </g>
+
+
+                <!-- BAY OF BENGAL / INDIA DEMO REGION -->
+
+                <path
+                    d="
+                        M120 90
+                        C190 70 270 90 330 125
+                        C390 160 420 220 455 265
+                        C485 300 515 330 550 360
+                        L510 430
+                        L350 445
+                        L230 400
+                        L150 300
+                        L100 200
+                        Z
+                    "
+                    fill="#0d2638"
+                    stroke="#24516b"
+                    stroke-width="2"
+                    opacity="0.85"
+                />
+
+
+                <!-- OCEAN CONTOUR LINES -->
+
+                <path
+                    d="M520 110 C650 80 790 100 920 150"
+                    fill="none"
+                    stroke="#123149"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M560 180 C700 145 820 180 950 230"
+                    fill="none"
+                    stroke="#123149"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M590 260 C720 220 850 270 960 320"
+                    fill="none"
+                    stroke="#123149"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M610 340 C730 300 850 350 950 400"
+                    fill="none"
+                    stroke="#123149"
+                    stroke-width="2"
+                />
+
+
+                <!-- BORDER -->
 
                 <rect
-                    class="map-border"
                     x="20"
                     y="20"
                     width="960"
                     height="480"
                     rx="16"
+                    fill="none"
+                    stroke="#1a3a55"
+                    stroke-width="2"
                 />
 
 
-                <circle
-                    id="eventRadius"
-                    class="event-radius"
-                    cx="0"
-                    cy="0"
-                    r="55"
-                />
-
-
-                <polyline
-                    id="routeLine"
-                    class="route-line"
-                    points=""
-                />
-
-
-                <line
-                    id="predictionLine"
-                    class="prediction-line"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="0"
-                />
-
-
-                <line
-                    id="directionArrow"
-                    class="direction-arrow"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="0"
-                />
-
-
-                <g id="trajectoryNodes"></g>
-
-
-                <circle
-                    id="predictedNode"
-                    class="predicted-node"
-                    cx="0"
-                    cy="0"
-                    r="9"
-                />
-
+                <!-- TITLE -->
 
                 <text
-                    x="35"
-                    y="48"
-                    class="map-label"
+                    x="40"
+                    y="55"
+                    fill="#d8ecff"
+                    font-size="18"
+                    font-family="Arial, sans-serif"
+                    font-weight="700"
                 >
                     BAY OF BENGAL
                 </text>
 
-
                 <text
-                    x="35"
-                    y="66"
-                    class="map-label-muted"
+                    x="40"
+                    y="78"
+                    fill="#6f8da5"
+                    font-size="11"
+                    font-family="Arial, sans-serif"
                 >
-                    SPATIO-TEMPORAL WEATHER FIELD
+                    SPATIO-TEMPORAL WEATHER FIELD · DEMO
                 </text>
 
 
-                <g id="currentLabel">
+                <!-- HISTORICAL TRAJECTORY -->
 
-                    <rect
-                        class="map-label-box"
-                        x="0"
-                        y="0"
-                        width="165"
-                        height="44"
-                        rx="6"
-                    />
-
-                    <text
-                        id="currentLabelText"
-                        x="0"
-                        y="0"
-                        class="map-label"
-                    ></text>
-
-                </g>
+                <polyline
+                    points="
+                        250,410
+                        320,385
+                        390,350
+                        455,315
+                        520,275
+                        585,240
+                    "
+                    fill="none"
+                    stroke="#28a9ff"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
 
 
-                <g id="predictionLabel">
+                <!-- HISTORICAL NODES -->
 
-                    <rect
-                        class="map-label-box"
-                        x="0"
-                        y="0"
-                        width="175"
-                        height="44"
-                        rx="6"
-                    />
+                <circle cx="250" cy="410" r="6"
+                    fill="#28a9ff"/>
 
-                    <text
-                        id="predictionLabelText"
-                        x="0"
-                        y="0"
-                        class="map-label"
-                    ></text>
+                <circle cx="320" cy="385" r="6"
+                    fill="#28a9ff"/>
 
-                </g>
+                <circle cx="390" cy="350" r="6"
+                    fill="#28a9ff"/>
+
+                <circle cx="455" cy="315" r="6"
+                    fill="#28a9ff"/>
+
+                <circle cx="520" cy="275" r="6"
+                    fill="#28a9ff"/>
+
+
+                <!-- CURRENT ANOMALY GLOW -->
+
+                <circle
+                    cx="585"
+                    cy="240"
+                    r="70"
+                    fill="url(#stormGlow)"
+                />
+
+
+                <!-- 5 KM AFFECTED REGION -->
+
+                <circle
+                    cx="585"
+                    cy="240"
+                    r="52"
+                    fill="#ff5063"
+                    fill-opacity="0.08"
+                    stroke="#ff5063"
+                    stroke-width="2"
+                    stroke-dasharray="7 6"
+                />
+
+
+                <!-- CURRENT ANOMALY -->
+
+                <circle
+                    cx="585"
+                    cy="240"
+                    r="12"
+                    fill="#ff5063"
+                    stroke="#ffffff"
+                    stroke-width="3"
+                />
+
+
+                <!-- CURRENT LABEL -->
+
+                <rect
+                    x="600"
+                    y="195"
+                    width="190"
+                    height="48"
+                    rx="7"
+                    fill="#091827"
+                    stroke="#ff5063"
+                    stroke-width="1"
+                />
+
+                <text
+                    x="615"
+                    y="214"
+                    fill="#ff7180"
+                    font-size="12"
+                    font-family="Arial, sans-serif"
+                    font-weight="700"
+                >
+                    CURRENT ANOMALY
+                </text>
+
+                <text
+                    x="615"
+                    y="232"
+                    fill="#b9d0e2"
+                    font-size="11"
+                    font-family="Arial, sans-serif"
+                >
+                    18.09° N · 89.36° E
+                </text>
+
+
+                <!-- PREDICTION PATH -->
+
+                <line
+                    x1="585"
+                    y1="240"
+                    x2="700"
+                    y2="145"
+                    stroke="#a87cff"
+                    stroke-width="3"
+                    stroke-dasharray="10 8"
+                />
+
+
+                <!-- DIRECTION ARROW -->
+
+                <line
+                    x1="625"
+                    y1="207"
+                    x2="675"
+                    y2="165"
+                    stroke="#ff9c42"
+                    stroke-width="4"
+                    marker-end="url(#trackingArrow)"
+                />
+
+
+                <!-- PREDICTED LOCATION -->
+
+                <circle
+                    cx="700"
+                    cy="145"
+                    r="28"
+                    fill="#a87cff"
+                    fill-opacity="0.12"
+                />
+
+                <circle
+                    cx="700"
+                    cy="145"
+                    r="10"
+                    fill="#a87cff"
+                    stroke="#ffffff"
+                    stroke-width="3"
+                />
+
+
+                <!-- PREDICTION LABEL -->
+
+                <rect
+                    x="715"
+                    y="105"
+                    width="210"
+                    height="48"
+                    rx="7"
+                    fill="#091827"
+                    stroke="#a87cff"
+                    stroke-width="1"
+                />
+
+                <text
+                    x="730"
+                    y="124"
+                    fill="#b894ff"
+                    font-size="12"
+                    font-family="Arial, sans-serif"
+                    font-weight="700"
+                >
+                    AI PREDICTION
+                </text>
+
+                <text
+                    x="730"
+                    y="142"
+                    fill="#b9d0e2"
+                    font-size="11"
+                    font-family="Arial, sans-serif"
+                >
+                    18.97° N · 90.10° E
+                </text>
+
+
+                <!-- DIRECTION -->
+
+                <text
+                    x="650"
+                    y="190"
+                    fill="#ffb16d"
+                    font-size="11"
+                    font-family="Arial, sans-serif"
+                    font-weight="700"
+                >
+                    NE · 103.90 km
+                </text>
+
+
+                <!-- COORDINATE GRID LABELS -->
+
+                <text x="70" y="485"
+                    fill="#47677e"
+                    font-size="10"
+                    font-family="Arial">
+                    75°E
+                </text>
+
+                <text x="850" y="485"
+                    fill="#47677e"
+                    font-size="10"
+                    font-family="Arial">
+                    100°E
+                </text>
+
+                <text x="35" y="115"
+                    fill="#47677e"
+                    font-size="10"
+                    font-family="Arial">
+                    25°N
+                </text>
+
+                <text x="35" y="465"
+                    fill="#47677e"
+                    font-size="10"
+                    font-family="Arial">
+                    5°N
+                </text>
+
+
+                <!-- STATUS -->
+
+                <rect
+                    x="40"
+                    y="430"
+                    width="175"
+                    height="38"
+                    rx="8"
+                    fill="#091827"
+                    stroke="#1c4058"
+                />
+
+                <circle
+                    cx="58"
+                    cy="449"
+                    r="5"
+                    fill="#45e08a"
+                />
+
+                <text
+                    x="72"
+                    y="453"
+                    fill="#8faabd"
+                    font-size="11"
+                    font-family="Arial, sans-serif"
+                >
+                    AI TRACKING ACTIVE
+                </text>
 
             </svg>
 
@@ -3184,7 +3469,6 @@ function trackingMapHTML() {
 
     `;
 }
-
 
 function createMapGrid() {
 
